@@ -6,7 +6,7 @@
       <img src="agri_shield_ai/assets/images/kavach_logo.png" width="110" alt="KAVACH logo"/>
     </td>
     <td valign="middle">
-      <h1 align="left">KAVACH- TETRA040 </h1>
+      <h1 align="left">KAVACH - TETRA040 </h1>
       <p align="left"><b>Kinetic Animal Vigilance &amp; Automated Crop-guard Harness</b></p>
     </td>
   </tr>
