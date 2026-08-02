@@ -1,0 +1,20 @@
+# Animal Detection Project — ML Lead Phases 4-9
+# Install with: pip install -r requirements.txt
+
+# Phase 6: YOLO training / Phase 8: inference
+ultralytics==8.2.103
+
+# Phase 7/8/9: camera capture, frame handling, drawing boxes/labels
+opencv-python==4.10.0.84
+
+# Underlying tensor ops for ultralytics (torch is pulled in automatically,
+# pinned here explicitly for reproducibility on Colab free tier)
+torch==2.3.1
+torchvision==0.18.1
+
+# Phase 4/5: dataset handling, annotation validation
+numpy==1.26.4
+pyyaml==6.0.2
+
+# Phase 5: annotation validation / image checks
+Pillow==10.4.0
