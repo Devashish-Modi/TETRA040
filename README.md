@@ -1,7 +1,7 @@
 <div align="center">
 
 <h1>
-  <img src="agri_shield_ai/assets/images/kavach_logo.png" width="96" height="175" alt="KAVACH" align="center"/>
+  <img src="agri_shield_ai/assets/images/kavach_logo.png" width="100" height="190" alt="KAVACH" align="center"/>
   &nbsp;KAVACH
 </h1>
 
