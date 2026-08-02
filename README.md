@@ -157,25 +157,37 @@ KAVACH helps farmers watch the farm perimeter, review detections, control deterr
 
 Real captures from the KAVACH farmer app (`agri_shield_ai`).
 
-| Home | Live |
-|:----:|:----:|
-| <img src="screenshots/home.png" width="280" alt="Home"/> | <img src="screenshots/live.png" width="280" alt="Live"/> |
-| Farm overview, animals today, cameras & deterrents | Live feed with AI detection (Wild Pig) |
+<p align="center">
+  <img src="./screenshots/home.png" width="220" alt="Home — farm overview"/>
+  &nbsp;
+  <img src="./screenshots/live.png" width="220" alt="Live feed"/>
+  &nbsp;
+  <img src="./screenshots/alerts.png" width="220" alt="Alerts"/>
+</p>
 
-| Alerts | Profile |
-|:------:|:-------:|
-| <img src="screenshots/alerts.png" width="280" alt="Alerts"/> | <img src="screenshots/profile.png" width="280" alt="Profile"/> |
-| AI detection & equipment alerts | Farm details & emergency contact |
+<p align="center">
+  <b>Home</b> &nbsp;·&nbsp; <b>Live</b> &nbsp;·&nbsp; <b>Alerts</b>
+</p>
 
-| Devices & alerts | Preferences |
-|:----------------:|:-----------:|
-| <img src="screenshots/settings.png" width="280" alt="Settings"/> | <img src="screenshots/preferences.png" width="280" alt="Preferences"/> |
-| Device online/offline & alert sounds | Detection settings, language & units |
+<p align="center">
+  <img src="./screenshots/profile.png" width="220" alt="Profile"/>
+  &nbsp;
+  <img src="./screenshots/settings.png" width="220" alt="Devices & alerts"/>
+  &nbsp;
+  <img src="./screenshots/preferences.png" width="220" alt="Preferences"/>
+</p>
 
-| About |
-|:-----:|
-| <img src="screenshots/about.png" width="280" alt="About"/> |
-| Help, support & KAVACH about |
+<p align="center">
+  <b>Profile</b> &nbsp;·&nbsp; <b>Devices</b> &nbsp;·&nbsp; <b>Preferences</b>
+</p>
+
+<p align="center">
+  <img src="./screenshots/about.png" width="220" alt="About KAVACH"/>
+</p>
+
+<p align="center">
+  <b>About</b>
+</p>
 
 ---
 
