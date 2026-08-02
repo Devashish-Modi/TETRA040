@@ -690,7 +690,7 @@ Open a GitHub Issue with:
 - Device / OS / Flutter version  
 - Screenshots if UI-related  
 
----
+----
 
 ## License
 
