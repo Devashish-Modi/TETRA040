@@ -30,17 +30,13 @@ KAVACH is a smart, non-invasive deterrent platform that helps farmers protect cr
 
 ---
 
-<!-- ============================================================
-     HERO BANNER
-     Replace assets/banner.png with your actual project banner.
-     Recommended size: 1920×640 or similar wide hero image.
-     ============================================================ -->
-
 <p align="center">
-  <img src="assets/banner.png" width="100%" alt="KAVACH hero banner — replace with actual banner">
+  <img src="agri_shield_ai/assets/images/kavach_logo.png" width="220" alt="KAVACH logo">
 </p>
 
-<p align="center"><em>Replace <code>assets/banner.png</code> with the actual project banner.</em></p>
+<p align="center">
+  <img src="assets/banner.png" width="100%" alt="KAVACH banner">
+</p>
 
 ---
 
@@ -113,7 +109,7 @@ This repository (**TETRA040**) includes the **KAVACH** farmer mobile app — an 
 
 TETRA040 / KAVACH is built to demonstrate an end-to-end **crop protection story**: detect → prioritize → deter → notify the farmer. The current farmer app on branch `farmer-app` showcases the product experience; ML and hardware layers complete the full system vision for judging, demos, and future field trials.
 
-----
+---
 
 ## KAVACH Farmer App
 
@@ -690,7 +686,7 @@ Open a GitHub Issue with:
 - Device / OS / Flutter version  
 - Screenshots if UI-related  
 
-----
+---
 
 ## License
 
