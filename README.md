@@ -1,8 +1,16 @@
 <div align="center">
 
-<img src="agri_shield_ai/assets/images/kavach_logo.png" width="120" alt="KAVACH logo"/>
-
-# KAVACH (Kinetic Animal Vigilance & Automated Crop-guard Harness)
+<table>
+  <tr>
+    <td valign="middle">
+      <img src="agri_shield_ai/assets/images/kavach_logo.png" width="110" alt="KAVACH logo"/>
+    </td>
+    <td valign="middle">
+      <h1 align="left">KAVACH</h1>
+      <p align="left"><b>Kinetic Animal Vigilance &amp; Automated Crop-guard Harness</b></p>
+    </td>
+  </tr>
+</table>
 
 ### Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection
 
@@ -43,7 +51,6 @@ KAVACH is a smart, non-invasive deterrent platform that helps farmers protect cr
 - [Project Overview](#project-overview)
 - [KAVACH Farmer App](#kavach-farmer-app)
 - [Features](#features)
-- [Project Screenshots](#project-screenshots)
 - [System Architecture](#system-architecture)
 - [Repository Structure](#repository-structure)
 - [Tech Stack](#tech-stack)
@@ -153,44 +160,6 @@ KAVACH helps farmers watch the farm perimeter, review detections, control deterr
 
 ---
 
-## Project Screenshots
-
-Real captures from the KAVACH farmer app (`agri_shield_ai`).
-
-<p align="center">
-  <img src="./screenshots/home.png" width="220" alt="Home — farm overview"/>
-  &nbsp;
-  <img src="./screenshots/live.png" width="220" alt="Live feed"/>
-  &nbsp;
-  <img src="./screenshots/alerts.png" width="220" alt="Alerts"/>
-</p>
-
-<p align="center">
-  <b>Home</b> &nbsp;·&nbsp; <b>Live</b> &nbsp;·&nbsp; <b>Alerts</b>
-</p>
-
-<p align="center">
-  <img src="./screenshots/profile.png" width="220" alt="Profile"/>
-  &nbsp;
-  <img src="./screenshots/settings.png" width="220" alt="Devices & alerts"/>
-  &nbsp;
-  <img src="./screenshots/preferences.png" width="220" alt="Preferences"/>
-</p>
-
-<p align="center">
-  <b>Profile</b> &nbsp;·&nbsp; <b>Devices</b> &nbsp;·&nbsp; <b>Preferences</b>
-</p>
-
-<p align="center">
-  <img src="./screenshots/about.png" width="220" alt="About KAVACH"/>
-</p>
-
-<p align="center">
-  <b>About</b>
-</p>
-
----
-
 ## System Architecture
 
 ```text
@@ -265,15 +234,7 @@ TETRA040/
 ├── README.md                   # You are here
 ├── schema.sql                  # Database schema (animal / system data)
 ├── assets/                     # Repo-level media (banner, docs)
-│   └── banner.png              # Hero banner (replace with actual)
-├── screenshots/                # App UI screenshots
-│   ├── home.png
-│   ├── live.png
-│   ├── alerts.png
-│   ├── profile.png
-│   ├── settings.png
-│   ├── preferences.png
-│   └── about.png
+│   └── banner.png              # Hero banner
 ├── agri_shield_ai/             # ★ KAVACH Flutter farmer app
 │   ├── lib/
 │   │   ├── screens/            # Splash, welcome, home, live, alerts, profile…
@@ -722,7 +683,7 @@ MIT License — free to use, modify, and distribute with attribution.
 - Keep secrets in `.env` locally — it is **not** committed (see `agri_shield_ai/.gitignore`).  
 - Camera views and alerts in the current build use **demo / sample data**.  
 - After asset changes in Flutter, use a **full restart** (`R`), not only hot reload.  
-- App UI screenshots live under `screenshots/`; banner under `assets/banner.png`.  
+- Banner image lives under `assets/banner.png`.  
 
 ---
 
