@@ -7,6 +7,8 @@
 
 ### Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection
 
+**KAVACH** = **K**inetic **A**nimal **V**igilance & **A**utomated **C**rop-guard **H**arness
+
 **TETRA040** · AI-powered farm protection for farmers
 
 KAVACH is a smart, non-invasive deterrent platform that helps farmers protect crops from stray and grazing animals using computer vision, priority-based actuation, and a modern Flutter farmer app — without harming animals or fencing off livelihoods.
@@ -77,7 +79,7 @@ Farmers need a system that is **always watching**, **humane**, and **actionable*
 
 ### The Solution
 
-**KAVACH** (meaning *shield* / *armor*) is a **smart non-invasive stray & grazing animal deterrent system for crop protection**. It combines:
+**KAVACH** (*Kinetic Animal Vigilance & Automated Crop-guard Harness*; also meaning *shield* / *armor*) is a **smart non-invasive stray & grazing animal deterrent system for crop protection**. It combines:
 
 1. **Computer vision** (YOLOv8 + OpenCV) to detect animals near the perimeter in real time  
 2. A **priority engine** that chooses the right response based on animal type, urgency, and conditions  
@@ -156,22 +158,27 @@ KAVACH helps farmers watch the farm perimeter, review detections, control deterr
 
 ## Project Screenshots
 
-> Place real captures under `screenshots/`. Paths below are placeholders until assets are added.
+Real captures from the KAVACH farmer app (`agri_shield_ai`).
 
 | Home | Live |
 |:----:|:----:|
-| ![Home](screenshots/home.png) | ![Live](screenshots/live.png) |
-| Farm overview & deterrents | Camera monitoring |
+| <img src="screenshots/home.png" width="280" alt="Home"/> | <img src="screenshots/live.png" width="280" alt="Live"/> |
+| Farm overview, animals today, cameras & deterrents | Live feed with AI detection (Wild Pig) |
 
 | Alerts | Profile |
 |:------:|:-------:|
-| ![Alerts](screenshots/alerts.png) | ![Profile](screenshots/profile.png) |
-| Detection & equipment alerts | Farm details & settings |
+| <img src="screenshots/alerts.png" width="280" alt="Alerts"/> | <img src="screenshots/profile.png" width="280" alt="Profile"/> |
+| AI detection & equipment alerts | Farm details & emergency contact |
 
-| Settings |
-|:--------:|
-| ![Settings](screenshots/settings.png) |
-| Language & preferences |
+| Devices & alerts | Preferences |
+|:----------------:|:-----------:|
+| <img src="screenshots/settings.png" width="280" alt="Settings"/> | <img src="screenshots/preferences.png" width="280" alt="Preferences"/> |
+| Device online/offline & alert sounds | Detection settings, language & units |
+
+| About |
+|:-----:|
+| <img src="screenshots/about.png" width="280" alt="About"/> |
+| Help, support & KAVACH about |
 
 ---
 
@@ -250,12 +257,14 @@ TETRA040/
 ├── schema.sql                  # Database schema (animal / system data)
 ├── assets/                     # Repo-level media (banner, docs)
 │   └── banner.png              # Hero banner (replace with actual)
-├── screenshots/                # App UI screenshots (placeholders)
+├── screenshots/                # App UI screenshots
 │   ├── home.png
 │   ├── live.png
 │   ├── alerts.png
 │   ├── profile.png
-│   └── settings.png
+│   ├── settings.png
+│   ├── preferences.png
+│   └── about.png
 ├── agri_shield_ai/             # ★ KAVACH Flutter farmer app
 │   ├── lib/
 │   │   ├── screens/            # Splash, welcome, home, live, alerts, profile…
@@ -704,7 +713,7 @@ MIT License — free to use, modify, and distribute with attribution.
 - Keep secrets in `.env` locally — it is **not** committed (see `agri_shield_ai/.gitignore`).  
 - Camera views and alerts in the current build use **demo / sample data**.  
 - After asset changes in Flutter, use a **full restart** (`R`), not only hot reload.  
-- Hero banner and screenshot paths are placeholders until media is added under `assets/` and `screenshots/`.  
+- App UI screenshots live under `screenshots/`; banner under `assets/banner.png`.  
 
 ---
 
