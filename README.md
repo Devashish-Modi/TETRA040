@@ -113,7 +113,7 @@ This repository (**TETRA040**) includes the **KAVACH** farmer mobile app — an 
 
 TETRA040 / KAVACH is built to demonstrate an end-to-end **crop protection story**: detect → prioritize → deter → notify the farmer. The current farmer app on branch `farmer-app` showcases the product experience; ML and hardware layers complete the full system vision for judging, demos, and future field trials.
 
----
+----
 
 ## KAVACH Farmer App
 
