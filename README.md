@@ -2,11 +2,9 @@
 
 <img src="agri_shield_ai/assets/images/kavach_logo.png" width="120" alt="KAVACH logo"/>
 
-# KAVACH
+# KAVACH (Kinetic Animal Vigilance & Automated Crop-guard Harness)
 
-### Kinetic Animal Vigilance & Automated Crop-guard Harness
-
-**Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection**
+### Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection
 
 **TETRA040** · AI-powered farm protection for farmers
 
