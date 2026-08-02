@@ -14,8 +14,6 @@
 
 ### Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection
 
-**TETRA040** · AI-powered farm protection for farmers
-
 KAVACH is a smart, non-invasive deterrent platform that helps farmers protect crops from stray and grazing animals using computer vision, priority-based actuation, and a modern Flutter farmer app — without harming animals or fencing off livelihoods.
 
 <br/>
