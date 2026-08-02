@@ -2,7 +2,7 @@
 
 <h1>
   <img src="agri_shield_ai/assets/images/kavach_logo.png" width="120" height="220" alt="KAVACH" align="center"/>
-  &nbsp;**KAVACH** = **K**inetic **A**nimal **V**igilance & **A**utomated **C**rop-guard **H**arness
+  &nbsp;KAVACH (Kinetic Animal Vigilance & Automated Crop-guard Harness)
 </h1>
 
 ### Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection
