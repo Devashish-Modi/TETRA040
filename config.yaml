@@ -1,0 +1,47 @@
+# config.yaml
+# Single source of truth for hardware mode switching.
+# Change ONLY this value to switch hardware targets - no code changes needed
+# anywhere else in the project.
+
+hardware_mode: simulation   # options: simulation | raspberry_pi | esp32
+
+# Serial settings - only used when hardware_mode: esp32
+esp32:
+  port: "/dev/ttyUSB0"      # Windows equivalent example: "COM3"
+  baudrate: 115200
+  timeout: 1
+
+# Wi-Fi settings - only used when hardware_mode: esp32 and using HTTP triggers
+esp32_wifi:
+  ip_address: "192.168.1.50"
+  endpoint: "/trigger"
+
+# GPIO pin mapping - only used when hardware_mode: raspberry_pi
+raspberry_pi:
+  laser_pin: 18
+  buzzer_pin: 23
+
+# Decision engine thresholds (Model 2 behavior tuning)
+# These distance thresholds are GLOBAL - the database does not provide
+# per-species distances, only which deterrent device to fire per level
+# (see the database section below).
+decision_engine:
+  animal_alert_confidence: 0.6     # minimum confidence to trigger an alert at all
+  level_1_distance_threshold: 10.0  # meters - example zone boundaries
+  level_2_distance_threshold: 5.0
+  level_3_distance_threshold: 2.0
+  repeat_alert_cooldown_seconds: 30   # avoid re-triggering alert every single frame for the same track_id
+
+# Deterrent priority database (queried once per animal/weather/period
+# combination per session before the decision rules run; repeat lookups
+# reuse the cached result instead of searching again - see
+# animal_database.py). Table schema: animal, weather, period, lvl1, lvl2,
+# lvl3 - lvl1/2/3 are DETERRENT DEVICES (e.g. Laser/Speaker/Water
+# Sprinkler) to trigger at each escalation level, not distances.
+#
+# The actual connection string is NEVER stored here - it lives in a .env
+# file (ANIMAL_DB_URL=...) in the project folder, loaded automatically by
+# python-dotenv. See .env.example for the format.
+database:
+  url_env_var: "ANIMAL_DB_URL"
+  table_name: "deterrent_priority"

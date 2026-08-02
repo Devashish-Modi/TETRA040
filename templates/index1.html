@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLOv8 Vision Dashboard</title>
+    <!-- Using Inter font for a clean, modern app look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons for lightweight SVG icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --surface-color: #1e293b;
+            --surface-hover: #334155;
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --danger-color: #ef4444;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 320px;
+            background: var(--surface-color);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            z-index: 10;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-main);
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Form Controls */
+        .control-group {
+            margin-bottom: 1.5rem;
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        select, input[type="file"] {
+            width: 100%;
+            background: var(--surface-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            outline: none;
+            margin-bottom: 0.75rem;
+        }
+
+        select:focus { border-color: var(--primary-color); }
+
+        /* Tabs / Buttons */
+        .tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .tab-btn, .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: left;
+        }
+
+        .tab-btn:hover { background: var(--surface-hover); }
+        
+        .tab-btn.active {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .action-btn {
+            background: var(--primary-color);
+            color: white;
+            justify-content: center;
+            width: 100%;
+        }
+        .action-btn:hover { background: var(--primary-hover); }
+
+        .action-btn.danger { background: transparent; border: 1px solid var(--danger-color); color: var(--danger-color); }
+        .action-btn.danger:hover { background: var(--danger-color); color: white; }
+
+        .panel { display: none; margin-top: 1rem; }
+        .panel.active { display: block; animation: fadeIn 0.3s ease; }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            overflow-y: auto;
+            gap: 2rem;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-color);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .status-badge {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Viewer screen */
+        .viewer-container {
+            width: 100%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        #viewer {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+            position: relative;
+            z-index: 2;
+        }
+
+        .empty-state {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            gap: 1rem;
+            z-index: 1;
+        }
+
+        /* Table Styles */
+        .table-container {
+    background: var(--surface-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    /* Removed max-height and overflow-y */
+}
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); }
+        th { background: rgba(0,0,0,0.2); font-weight: 600; color: var(--text-muted); font-size: 0.875rem; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255,255,255,0.02); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .table-container {
+    background: var(--surface-color);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    /* Add these two lines to enable scrolling */
+    max-height: 300px; 
+    overflow-y: auto;
+}
+body { 
+    font-family: 'Inter', sans-serif; 
+    background: var(--bg-color); 
+    color: var(--text-main);
+    display: flex;
+    min-height: 100vh; /* Changed from height: 100vh */
+    /* Removed overflow: hidden */
+}
+
+.sidebar {
+    width: 320px;
+    background: var(--surface-color);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    z-index: 10;
+    
+    /* Make sidebar stay fixed while the page scrolls */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto; 
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+    /* Removed overflow-y: auto to let the page handle scrolling */
+}
+th { 
+    /* Use a solid background instead of rgba so scrolled text doesn't show through */
+    background: #0f172a; 
+    font-weight: 600; 
+    color: var(--text-muted); 
+    font-size: 0.875rem; 
+    /* Add sticky positioning */
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 0 var(--border-color);
+}
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <i data-lucide="scan-line" style="color: var(--primary-color);"></i>
+            YOLOv8 Vision
+        </div>
+
+        <!-- NEW: Pole Configuration -->
+        <div class="section-title">Configuration</div>
+        <div class="control-group">
+            <label style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem; color: var(--text-muted);">Assign Pole Number</label>
+            <select id="poleSelect" onchange="updatePole()">
+                <option value="1">Pole 1</option>
+                <option value="2">Pole 2</option>
+                <option value="3">Pole 3</option>
+                <option value="4">Pole 4</option>
+                <option value="5">Pole 5</option>
+                <option value="6">Pole 6</option>
+                <option value="7">Pole 7</option>
+            </select>
+        </div>
+
+        <div class="section-title">Input Source</div>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('webcam')">
+                <i data-lucide="video"></i> Live Webcam
+            </button>
+            <button class="tab-btn" onclick="switchTab('image')">
+                <i data-lucide="image"></i> Image Upload
+            </button>
+            <button class="tab-btn" onclick="switchTab('video')">
+                <i data-lucide="film"></i> Video Upload
+            </button>
+        </div>
+
+        <!-- Dynamic Context Panels -->
+        <div id="webcam" class="panel active">
+            <div class="control-group" style="background: transparent; border: none; padding: 0;">
+                <button class="action-btn" onclick="startWebcam()" style="margin-bottom: 0.5rem;">
+                    <i data-lucide="play"></i> Start Feed
+                </button>
+                <button class="action-btn danger" onclick="stopStream()">
+                    <i data-lucide="square"></i> Stop Feed
+                </button>
+            </div>
+        </div>
+
+        <div id="image" class="panel">
+            <div class="control-group" style="background: transparent; border: none; padding: 0;">
+                <input type="file" id="imageInput" accept="image/*">
+                <button class="action-btn" onclick="processImage()">
+                    <i data-lucide="cpu"></i> Analyze Image
+                </button>
+            </div>
+        </div>
+
+        <div id="video" class="panel">
+            <div class="control-group" style="background: transparent; border: none; padding: 0;">
+                <input type="file" id="videoInput" accept="video/*">
+                <button class="action-btn" onclick="processVideo()">
+                    <i data-lucide="cpu"></i> Analyze Video
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        
+        <!-- Header / Status -->
+        <div class="top-bar">
+            <div>
+                <h2 style="font-size: 1.25rem;">Detection Feed</h2>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem;">Real-time YOLOv8 Inference</p>
+            </div>
+            <div class="status-badge">
+                <i data-lucide="map-pin" size="16"></i>
+                Active Pole: <span id="displayPole">1</span>
+            </div>
+        </div>
+
+        <!-- Viewer -->
+        <div class="viewer-container">
+            <div class="empty-state" id="emptyState">
+                <i data-lucide="monitor-off" size="48"></i>
+                <p>No active input source. Select a source to begin.</p>
+            </div>
+            <img id="viewer" src="" alt="YOLOv8 Output feed">
+        </div>
+
+        <!-- Logs -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Source</th>
+                        <th>Pole ID</th>
+                        <th>Detections</th>
+                    </tr>
+                </thead>
+                <tbody id="logTableBody">
+                    <!-- Logs injected via JS -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+<script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // App State
+    let pollingInterval = null;
+    let selectedPole = 1; // Variable storing the selected pole
+
+    // DOM Elements
+    const viewer = document.getElementById('viewer');
+    const emptyState = document.getElementById('emptyState');
+    const tbody = document.getElementById('logTableBody');
+    const displayPoleEl = document.getElementById('displayPole');
+
+    // Pole Selection Logic
+    function updatePole() {
+        const selectElement = document.getElementById('poleSelect');
+        selectedPole = selectElement.value;
+        displayPoleEl.innerText = selectedPole;
+        console.log(`[State] Active Pole updated to: ${selectedPole}`);
+    }
+
+    // UI Logic
+    function switchTab(tabId) {
+        // Toggle Sidebar panels
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        
+        stopStream(); // Safely stop active streams when switching context
+    }
+
+    function showViewer(srcStr) {
+        emptyState.style.display = 'none';
+        viewer.style.display = 'block';
+        viewer.src = srcStr;
+    }
+
+    function stopStream() {
+        viewer.src = "";
+        viewer.style.display = "none";
+        emptyState.style.display = "flex";
+        if (pollingInterval) clearInterval(pollingInterval);
+    }
+
+    // API Integrations
+    async function fetchLogs() {
+        try {
+            const response = await fetch('/api/logs');
+            const logs = await response.json();
+            
+            tbody.innerHTML = logs.map(entry => `
+                <tr>
+                    <td style="color: var(--text-muted);">${entry.timestamp}</td>
+                    <td><strong style="color: var(--text-main);">${entry.source}</strong></td>
+                    <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">Pole ${entry.pole_id}</span></td>
+                    <!-- Assuming backend logs don't have pole info yet, we mock it or use the current one -->
+                    <td><span style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">Pole ${selectedPole}</span></td>
+                    <td>${entry.summary}</td>
+                </tr>
+            `).join("");
+        } catch (error) {
+            console.error("Error fetching logs:", error);
+            // Fallback empty state for table if API fails during dev
+            if(tbody.children.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">No logs available or backend offline.</td></tr>`;
+            }
+        }
+    }
+
+    function startWebcam() {
+        // We can pass the selectedPole to the backend if needed: `/webcam_feed?session_id=...&pole=${selectedPole}`
+        const sessionId = "webcam_" + Date.now();
+        showViewer(`/webcam_feed?session_id=${sessionId}&pole=${selectedPole}`);
+        
+        if (pollingInterval) clearInterval(pollingInterval);
+        pollingInterval = setInterval(fetchLogs, 2000);
+    }
+
+    async function processImage() {
+        const fileInput = document.getElementById('imageInput');
+        if (!fileInput.files.length) return alert("Please select an image file first.");
+
+        const sessionId = "img_" + Date.now();
+        const formData = new FormData();
+        formData.append("image", fileInput.files[0]);
+        formData.append("session_id", sessionId);
+        formData.append("pole_id", selectedPole); // Passing state to backend
+
+        try {
+            const response = await fetch("/process_image", { method: "POST", body: formData });
+            const data = await response.json();
+
+            if (data.error) return alert(data.error);
+            showViewer("data:image/jpeg;base64," + data.image);
+            fetchLogs();
+        } catch(e) {
+            console.error(e);
+            alert("Error processing image. Check console and backend server.");
+        }
+    }
+
+    async function processVideo() {
+        const fileInput = document.getElementById('videoInput');
+        if (!fileInput.files.length) return alert("Please select a video file first.");
+
+        const formData = new FormData();
+        formData.append("video", fileInput.files[0]);
+        formData.append("pole_id", selectedPole);
+
+        try {
+            const uploadResp = await fetch("/upload_video", { method: "POST", body: formData });
+            const uploadData = await uploadResp.json();
+
+            if (uploadData.error) return alert(uploadData.error);
+
+            const sessionId = "vid_" + Date.now();
+            showViewer(`/video_feed/${uploadData.filename}?session_id=${sessionId}&pole=${selectedPole}`);
+
+            if (pollingInterval) clearInterval(pollingInterval);
+            pollingInterval = setInterval(fetchLogs, 2000);
+        } catch(e) {
+            console.error(e);
+            alert("Error uploading video. Check console and backend server.");
+        }
+    }
+
+    // Initial Load
+    document.addEventListener("DOMContentLoaded", () => {
+        fetchLogs();
+        updatePole(); // Set initial pole state on load
+    });
+</script>
+
+</body>
+</html>
