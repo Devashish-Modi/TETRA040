@@ -1,0 +1,293 @@
+{
+  "@@locale": "en",
+  "appName": "KAVACH",
+  "farmProtectionSystem": "Farm protection system",
+  "navHome": "Home",
+  "navLive": "Live",
+  "navAlerts": "Alerts",
+  "navProfile": "Profile",
+  "hiGreeting": "Hi, {greeting}",
+  "@hiGreeting": {
+    "placeholders": {
+      "greeting": {"type": "String"}
+    }
+  },
+  "goodMorning": "Good Morning",
+  "goodAfternoon": "Good Afternoon",
+  "goodEvening": "Good Evening",
+  "farmLocation": "Green Valley Farm",
+  "animalsToday": "Animals today",
+  "detections": "detections",
+  "detectedAroundFarm": "Detected around your farm today",
+  "byAnimalType": "By animal type",
+  "cameras": "Cameras",
+  "onlineCount": "{online}/{total} online",
+  "@onlineCount": {
+    "placeholders": {
+      "online": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "allOnline": "All online",
+  "needsCheck": "Needs check",
+  "openLive": "Open Live",
+  "deterrents": "Deterrents",
+  "alerts": "Alerts",
+  "clear": "Clear",
+  "noAlerts": "No alerts — farm looks clear.",
+  "alertDismissed": "Alert dismissed",
+  "allAlertsCleared": "All alerts cleared",
+  "aiStatus": "AI Status",
+  "aiScanning": "Detection active",
+  "aiReady": "Models ready · Watching farm",
+  "aiConfidence": "Confidence",
+  "language": "Language",
+  "languageSettings": "Language settings",
+  "currentLanguage": "Current language: {name}",
+  "@currentLanguage": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "english": "English",
+  "hindi": "हिन्दी",
+  "gujarati": "ગુજરાતી",
+  "profileSettings": "Profile & Settings",
+  "liveFeed": "Live Feed",
+  "liveFeedCamera": "Live Feed · Camera {index}",
+  "@liveFeedCamera": {
+    "placeholders": {
+      "index": {"type": "int"}
+    }
+  },
+  "alertsTitle": "Alerts",
+  "alertsSubtitle": "AI detection and equipment alerts",
+  "welcomeTitle": "Welcome to\nKAVACH",
+  "welcomeBody": "See animals early, run laser, speaker, or water — and keep crops safe.",
+  "getStarted": "Get Started",
+  "continueAsGuest": "Continue as Guest",
+  "signIn": "Sign in",
+  "joinKavach": "Join KAVACH",
+  "welcomeBack": "Welcome back",
+  "createAccount": "Create account",
+  "login": "Login",
+  "phone": "Phone",
+  "username": "Username",
+  "password": "Password",
+  "alreadyHaveAccount": "Already have an account? Login",
+  "newHere": "New here? Create account",
+  "manualAlarm": "Manual Alarm",
+  "viewAllAlerts": "View all",
+  "setupFarmLogin": "Set up your farm login in a minute.",
+  "loginWithPhoneOrUsername": "Login with phone or username.",
+  "yourName": "Your name",
+  "farmerNameHint": "Farmer name",
+  "phoneNumber": "Phone number",
+  "tenDigitMobile": "10-digit mobile",
+  "yourUsername": "Your username",
+  "enterPassword": "Enter password",
+  "demoLogin": "Demo login\nPhone · 9876543210 · farm1234\nUsername · ramesh · farm1234",
+  "welcomeUser": "Welcome, {name}",
+  "@welcomeUser": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "signedInAsGuest": "Signed in as Guest",
+  "notSignedIn": "Not signed in",
+  "guestMode": "Guest mode",
+  "sectionYourDetails": "Your details",
+  "farmName": "Farm name",
+  "villageArea": "Village / area",
+  "yourPhone": "Your phone",
+  "saveProfile": "Save profile",
+  "profileSaved": "Profile saved",
+  "enterYourName": "Enter your name",
+  "enterFarmName": "Enter farm name",
+  "enterValidPhone": "Enter a valid phone number",
+  "sectionEmergency": "Emergency contact",
+  "emergencyHelp": "Someone we can call if animals break in or equipment fails.",
+  "emergencyPhone": "Emergency phone",
+  "saveEmergency": "Save emergency contact",
+  "emergencySaved": "Emergency contact saved",
+  "enterValidEmergency": "Enter a valid emergency phone number",
+  "sectionDevices": "Connected devices",
+  "tapDeviceToggle": "Tap a device to toggle Online / Offline",
+  "online": "Online",
+  "offline": "Offline",
+  "deviceNowStatus": "{name} is now {status}",
+  "@deviceNowStatus": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "status": {"type": "String"}
+    }
+  },
+  "sectionAlertsSounds": "Alerts & sounds",
+  "pushAlerts": "Push alerts",
+  "pushAlertsSub": "Show alerts on your phone",
+  "alertSounds": "Alert sounds",
+  "alertSoundsSub": "Play a sound when animals are seen",
+  "vibration": "Vibration",
+  "vibrationSub": "Phone vibrates on alerts",
+  "equipmentOfflineAlerts": "Equipment offline alerts",
+  "equipmentOfflineSub": "Tell me if a camera or speaker stops",
+  "dailySummary": "Daily summary",
+  "dailySummarySub": "One message each evening",
+  "sectionDetection": "Detection settings",
+  "detectionSensitivity": "Detection sensitivity",
+  "sensitivityHint": "Higher = more alerts. Lower = fewer alerts.",
+  "autoActivate": "Auto activate deterrents",
+  "autoActivateSub": "Turn on laser / speaker / water automatically",
+  "nightWatch": "Stronger watch at night",
+  "nightWatchSub": "Extra careful after dark",
+  "sectionPreferences": "App preferences",
+  "units": "Units",
+  "metric": "Metric",
+  "imperial": "Imperial",
+  "metricHint": "m, °C",
+  "imperialHint": "ft, °F",
+  "sectionHelp": "Help & support",
+  "howToUse": "How to use this app",
+  "howToUseSub": "Simple guide for each screen",
+  "howToUseTitle": "How to use KAVACH",
+  "howToUseBody": "Home — farm overview, deterrents, and alerts.\nLive — watch cameras, take photos, record.\nAlerts — review detections and open manual alarm.\nProfile — your farm details and settings.",
+  "chatSupport": "Chat with support",
+  "supportChatTitle": "Support chat",
+  "supportChatBody": "Email help@kavach.app\n\nIn this demo, your message is saved locally. A real chat will open here in a future update.",
+  "sendMessage": "Send message",
+  "supportMessageSent": "Support message sent",
+  "callHelpline": "Call helpline",
+  "callHelplineBody": "Helpline: 1800-123-4567\nHours: 8 AM – 8 PM\n\nThis demo cannot place a real call.",
+  "copyNumber": "Copy number",
+  "sectionAbout": "About",
+  "versionFarmProtection": "Version 6.0.0 · Farm protection",
+  "privacy": "Privacy",
+  "privacyBody": "KAVACH stores your profile and settings on this device. Camera views and alerts in this demo are sample data only. We do not sell your farm information.",
+  "termsOfUse": "Terms of use",
+  "termsBody": "Use deterrents carefully. Keep people and pets away from laser and water spray while active. You are responsible for safe use on your farm. KAVACH is a prototype for demonstration.",
+  "signOut": "Sign out",
+  "signOutConfirm": "Sign out?",
+  "signOutBody": "You will return to the login screen.",
+  "flashOn": "Flash on",
+  "flashOff": "Flash off",
+  "flashTurnedOn": "Flash turned ON",
+  "flashTurnedOff": "Flash turned OFF",
+  "record": "Record",
+  "stopRecording": "Stop recording",
+  "recordingStarted": "Recording started",
+  "recordingStopped": "Recording stopped · clip saved",
+  "openActivateHint": "Open Activate to scare it away safely.",
+  "goToActivate": "Go to Activate",
+  "confidenceLabel": "Confidence: {value}",
+  "@confidenceLabel": {
+    "placeholders": {
+      "value": {"type": "String"}
+    }
+  },
+  "nothingActive": "Nothing active. Use Activate to turn something on.",
+  "switchCam": "Switch Cam",
+  "switchedCamera": "Switched to Camera {index}",
+  "@switchedCamera": {
+    "placeholders": {
+      "index": {"type": "int"}
+    }
+  },
+  "zoomLabel": "Zoom {value}x",
+  "@zoomLabel": {
+    "placeholders": {
+      "value": {"type": "String"}
+    }
+  },
+  "snapshot": "Snapshot",
+  "photoSaved": "Photo saved · #{count}",
+  "@photoSaved": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "alarmLevelsHint": "Three alarm levels. Hold a level to turn it on.",
+  "levelSoftWarning": "Level 1 · Soft warning",
+  "levelActiveAlert": "Level 2 · Active alert",
+  "levelCritical": "Level 3 · Critical",
+  "alarmActiveStatus": "Level {level} · {name} ON · {seconds}s left",
+  "@alarmActiveStatus": {
+    "placeholders": {
+      "level": {"type": "int"},
+      "name": {"type": "String"},
+      "seconds": {"type": "int"}
+    }
+  },
+  "stop": "Stop",
+  "stoppedNamed": "{name} stopped",
+  "@stoppedNamed": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "stopFirst": "Stop {name} first",
+  "@stopFirst": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "levelActivated": "Level {level} · {name} is ON for 15s",
+  "@levelActivated": {
+    "placeholders": {
+      "level": {"type": "int"},
+      "name": {"type": "String"}
+    }
+  },
+  "holdToActivate": "Hold to activate Level {level}",
+  "@holdToActivate": {
+    "placeholders": {
+      "level": {"type": "int"}
+    }
+  },
+  "releaseToCancel": "Release to cancel",
+  "keepPeopleAway": "Keep people away while this is active.",
+  "alreadyOn": "{name} already ON",
+  "@alreadyOn": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "statusChanged": "{name} → {status}",
+  "@statusChanged": {
+    "placeholders": {
+      "name": {"type": "String"},
+      "status": {"type": "String"}
+    }
+  },
+  "statusOn": "ON",
+  "statusOff": "OFF",
+  "statusReady": "Ready",
+  "statusFault": "Fault",
+  "chooseLanguageTitle": "Choose your language",
+  "chooseLanguageBody": "Pick the language you want to use in KAVACH. You can change it later in Profile.",
+  "continueLabel": "Continue",
+  "equipLaser": "Laser",
+  "equipSpeaker": "Speaker",
+  "equipWater": "Water",
+  "equipWaterFull": "Water Sprinkler",
+  "equipLaserDesc": "Scares animals with light",
+  "equipSpeakerDesc": "Plays loud sounds to move them away",
+  "equipWaterDesc": "Sprays a strong water jet",
+  "animalCow": "Cow",
+  "animalBuffalo": "Buffalo",
+  "animalGoat": "Goat",
+  "animalWildPig": "Wild Pig",
+  "confidenceVerySure": "Very sure",
+  "alertWaterLow": "Water tank is getting low",
+  "alertCameraOffline": "Camera 2 is offline",
+  "alertBatteryOk": "Battery is charging well (87%)",
+  "alertSpeakerCheck": "Speaker needs a check",
+  "errInvalidPhone": "Enter a valid 10-digit phone number",
+  "errPasswordShort": "Password must be at least 4 characters",
+  "errWrongPhonePassword": "Wrong phone or password",
+  "errInvalidUsername": "Enter a valid username",
+  "errWrongUsernamePassword": "Wrong username or password",
+  "errEnterName": "Enter your name",
+  "errPhoneRegistered": "This phone is already registered",
+  "errUsernameShort": "Username must be at least 3 characters",
+  "errUsernameTaken": "This username is already taken"
+}
