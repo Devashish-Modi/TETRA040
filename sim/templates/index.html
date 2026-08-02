@@ -1,0 +1,726 @@
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAKSHAK — Field Security Simulation</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#070c14;--panel:#0b1520;--panel2:#0d1a28;
+  --border:#162030;--border2:#1e3048;
+  --green:#00e87a;--laser:#ff2040;--sound:#ffaa00;--water:#00aaff;
+  --text:#c8daea;--dim:#4a6a88;--mono:'Courier New',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+header{
+  background:var(--panel);border-bottom:1px solid var(--border2);
+  padding:10px 20px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:relative;z-index:10;
+}
+.logo-block{display:flex;align-items:center;gap:14px}
+.logo-mark{
+  width:36px;height:36px;border:1.5px solid var(--green);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 12px rgba(0,232,122,0.2);
+}
+.logo-mark svg{width:20px;height:20px}
+.logo-title{font-size:20px;font-weight:700;letter-spacing:5px;color:var(--green)}
+.logo-sub{font-size:9px;letter-spacing:3px;color:var(--dim);margin-top:1px}
+.header-meta{display:flex;align-items:center;gap:24px}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:10px;letter-spacing:2px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.clock{font-size:11px;color:var(--dim);letter-spacing:1px}
+
+.main{flex:1;display:flex;overflow:hidden}
+.scene{flex:1;position:relative;overflow:hidden}
+canvas{position:absolute;top:0;left:0;width:100%;height:100%}
+
+.panel{
+  width:290px;flex-shrink:0;background:var(--panel);
+  border-left:1px solid var(--border2);display:flex;flex-direction:column;overflow:hidden;
+}
+.p-section{padding:14px 16px;border-bottom:1px solid var(--border)}
+.p-label{font-size:9px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+
+/* API status bar */
+.api-bar{
+  display:flex;align-items:center;gap:8px;background:#081218;
+  border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:10px;
+}
+.api-dot{width:6px;height:6px;border-radius:50%;background:var(--dim);flex-shrink:0;transition:all .3s}
+.api-dot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
+.api-dot.err{background:var(--laser);box-shadow:0 0 6px var(--laser)}
+.api-msg{color:var(--dim);flex:1}
+.api-msg.ok{color:var(--green)}
+.api-msg.err{color:var(--laser)}
+
+/* Trigger buttons */
+.trigger-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.trig-btn{
+  padding:10px 4px;background:#081218;border:1px solid var(--border2);
+  color:var(--dim);font-family:var(--mono);font-size:9px;letter-spacing:1px;
+  text-transform:uppercase;border-radius:6px;cursor:pointer;transition:all .2s;text-align:center;
+}
+.trig-btn:hover{background:#0d1f2e;color:var(--text);border-color:var(--border2)}
+.trig-btn:active{transform:scale(.96)}
+.trig-btn.ll:hover{border-color:rgba(255,32,64,.5);color:var(--laser)}
+.trig-btn.sp:hover{border-color:rgba(255,170,0,.5);color:var(--sound)}
+.trig-btn.ws:hover{border-color:rgba(0,170,255,.5);color:var(--water)}
+.trig-btn.all-on:hover{border-color:rgba(0,232,122,.5);color:var(--green)}
+.trig-btn.all-off:hover{border-color:rgba(74,106,136,.5);color:var(--text)}
+.trig-btn .ti{font-size:14px;display:block;margin-bottom:4px}
+
+/* Device cards — read only */
+.dev-card{
+  background:#081218;border:1px solid var(--border);border-radius:7px;
+  padding:10px 12px;margin-bottom:7px;display:flex;align-items:center;
+  justify-content:space-between;transition:all .3s;
+}
+.dev-card.active-ll{border-color:rgba(255,32,64,.6);box-shadow:0 0 14px rgba(255,32,64,.14)}
+.dev-card.active-sp{border-color:rgba(255,170,0,.6);box-shadow:0 0 14px rgba(255,170,0,.14)}
+.dev-card.active-ws{border-color:rgba(0,170,255,.6);box-shadow:0 0 14px rgba(0,170,255,.14)}
+.dev-icon{width:34px;height:34px;border-radius:7px;background:#0d1e2c;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.dev-info{margin-left:10px;flex:1}
+.dev-name{font-size:11px;font-weight:700;letter-spacing:.5px}
+.dev-sub{font-size:9px;color:var(--dim);margin-top:2px;letter-spacing:.5px}
+.dev-badge{
+  font-size:9px;letter-spacing:1.5px;padding:3px 7px;border-radius:4px;
+  border:1px solid var(--border);color:var(--dim);transition:all .3s;flex-shrink:0;
+}
+.dev-badge.on-ll{border-color:var(--laser);color:var(--laser);box-shadow:0 0 6px rgba(255,32,64,.3)}
+.dev-badge.on-sp{border-color:var(--sound);color:var(--sound);box-shadow:0 0 6px rgba(255,170,0,.3)}
+.dev-badge.on-ws{border-color:var(--water);color:var(--water);box-shadow:0 0 6px rgba(0,170,255,.3)}
+
+.pir-row{
+  background:#081218;border:1px solid var(--border);border-radius:7px;
+  padding:10px 12px;display:flex;align-items:center;justify-content:space-between;
+}
+.pir-status{font-size:9px;letter-spacing:2px;color:var(--green);display:flex;align-items:center;gap:5px}
+.pir-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:blink 1.4s ease-in-out infinite}
+
+.log-head{padding:10px 16px 6px;border-bottom:1px solid var(--border);flex-shrink:0}
+.log-feed{flex:1;overflow-y:auto;padding:8px 12px;scrollbar-width:thin;scrollbar-color:#162030 transparent}
+.log-feed::-webkit-scrollbar{width:3px}
+.log-feed::-webkit-scrollbar-thumb{background:#162030;border-radius:3px}
+.log-entry{
+  padding:5px 8px;margin-bottom:4px;border-radius:4px;background:#081218;
+  border-left:2px solid var(--border);display:flex;gap:8px;font-size:10px;
+  animation:fadein .3s ease;
+}
+@keyframes fadein{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.log-entry.warn{border-left-color:var(--sound)}
+.log-entry.alert{border-left-color:var(--laser)}
+.log-entry.info{border-left-color:var(--water)}
+.log-entry.ok{border-left-color:var(--green)}
+.lt{color:var(--dim);white-space:nowrap;flex-shrink:0}
+.lm{color:var(--text)}
+
+.stats-bar{
+  flex-shrink:0;background:var(--panel2);border-top:1px solid var(--border);
+  padding:6px 16px;display:flex;gap:20px;align-items:center;
+}
+.stat{font-size:9px;letter-spacing:1px;display:flex;align-items:center;gap:5px}
+.sv{color:var(--green)}
+
+#alertOverlay{
+  position:absolute;top:12px;left:12px;pointer-events:none;
+  display:flex;flex-direction:column;gap:6px;z-index:5;
+}
+.a-chip{
+  background:rgba(255,32,64,.15);border:1px solid rgba(255,32,64,.4);
+  color:#ff8090;font-size:10px;padding:5px 10px;border-radius:4px;
+  letter-spacing:1px;animation:fadein .3s ease;
+}
+
+/* Duration countdown rings */
+.dur-ring{position:relative;width:28px;height:28px;flex-shrink:0}
+.dur-ring svg{width:28px;height:28px;transform:rotate(-90deg)}
+.dur-ring circle{fill:none;stroke-width:2;stroke-linecap:round}
+.dur-bg{stroke:var(--border)}
+.dur-arc{stroke-dasharray:75;stroke-dashoffset:75;transition:stroke-dashoffset .5s linear}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-block">
+    <div class="logo-mark">
+      <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="10,2 18,7 18,13 10,18 2,13 2,7" stroke="#00e87a" stroke-width="1.4" fill="none"/>
+        <circle cx="10" cy="10" r="3" fill="#00e87a"/>
+        <line x1="10" y1="2" x2="10" y2="7" stroke="#00e87a" stroke-width="1"/>
+        <line x1="10" y1="13" x2="10" y2="18" stroke="#00e87a" stroke-width="1"/>
+        <line x1="2" y1="7" x2="6.3" y2="9.5" stroke="#00e87a" stroke-width="1"/>
+        <line x1="13.7" y1="10.5" x2="18" y2="13" stroke="#00e87a" stroke-width="1"/>
+        <line x1="2" y1="13" x2="6.3" y2="10.5" stroke="#00e87a" stroke-width="1"/>
+        <line x1="13.7" y1="9.5" x2="18" y2="7" stroke="#00e87a" stroke-width="1"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-title">RAKSHAK</div>
+      <div class="logo-sub">KAVACH · FIELD SECURITY SYSTEM · LIVE MONITOR</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="live-badge"><div class="pulse"></div>POLLING /api/state</div>
+    <div class="clock" id="clk">00:00:00</div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="scene">
+    <canvas id="c"></canvas>
+    <div id="alertOverlay"></div>
+  </div>
+
+  <aside class="panel">
+
+    <!-- API status -->
+    <div class="p-section">
+      <div class="p-label">API Connection</div>
+      <div class="api-bar" id="apiBar">
+        <div class="api-dot" id="apiDot"></div>
+        <div class="api-msg" id="apiMsg">Connecting to /api/state...</div>
+      </div>
+    </div>
+
+    <!-- Manual trigger buttons (calls /api/trigger) -->
+    <div class="p-section">
+      <div class="p-label">Manual Trigger (POST /api/trigger)</div>
+    <input type="number" id="poleInput" placeholder="Pole ID (0-7) or blank for ALL" style="width:100%; margin-bottom:6px; background:#000; border:1px solid var(--border2); color:var(--text); padding:4px 6px; font-family:var(--mono); font-size:9px;" min="0" max="7">
+    <div class="trigger-grid">
+        <button class="trig-btn ll" onclick="trigger('ll')" title="Activate Laser">
+          <span class="ti">⚡</span>LASER
+        </button>
+        <button class="trig-btn sp" onclick="trigger('sp')" title="Activate Speaker">
+          <span class="ti">◈</span>SPEAKER
+        </button>
+        <button class="trig-btn ws" onclick="trigger('ws')" title="Activate Sprinkler">
+          <span class="ti">◎</span>WATER
+        </button>
+        <button class="trig-btn all-on" onclick="trigAll()" title="Trigger all" style="grid-column:span 2">
+          <span class="ti">▶</span>ALL ON
+        </button>
+        <button class="trig-btn all-off" onclick="trigOff()" title="(State decays automatically)">
+          <span class="ti">■</span>RESET
+        </button>
+      </div>
+    </div>
+
+    <!-- Device state (read only — from API) -->
+    <div class="p-section">
+      <div class="p-label">Device State — Live</div>
+
+      <div class="dev-card" id="cll">
+        <div class="dev-icon" style="color:#ff4060">⚡</div>
+        <div class="dev-info">
+          <div class="dev-name">Laser Perimeter</div>
+          <div class="dev-sub">Continuous security fence</div>
+        </div>
+        <div class="dur-ring" id="ringll">
+          <svg viewBox="0 0 28 28"><circle class="dur-bg" cx="14" cy="14" r="11"/><circle class="dur-arc" id="arcll" cx="14" cy="14" r="11" stroke="#ff2040"/></svg>
+        </div>
+        <div class="dev-badge" id="bll">OFF</div>
+      </div>
+
+      <div class="dev-card" id="csp">
+        <div class="dev-icon" style="color:#ffaa00">◈</div>
+        <div class="dev-info">
+          <div class="dev-name">Alert Speaker</div>
+          <div class="dev-sub">High-power directional horn</div>
+        </div>
+        <div class="dur-ring" id="ringsp">
+          <svg viewBox="0 0 28 28"><circle class="dur-bg" cx="14" cy="14" r="11"/><circle class="dur-arc" id="arcsp" cx="14" cy="14" r="11" stroke="#ffaa00"/></svg>
+        </div>
+        <div class="dev-badge" id="bsp">OFF</div>
+      </div>
+
+      <div class="dev-card" id="cws">
+        <div class="dev-icon" style="color:#00aaff">◎</div>
+        <div class="dev-info">
+          <div class="dev-name">Water Sprinkler</div>
+          <div class="dev-sub">Rotary sprinkler heads</div>
+        </div>
+        <div class="dur-ring" id="ringws">
+          <svg viewBox="0 0 28 28"><circle class="dur-bg" cx="14" cy="14" r="11"/><circle class="dur-arc" id="arcws" cx="14" cy="14" r="11" stroke="#00aaff"/></svg>
+        </div>
+        <div class="dev-badge" id="bws">OFF</div>
+      </div>
+
+      <div class="pir-row">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="dev-icon" style="color:var(--green);background:#081218">👁</div>
+          <div>
+            <div class="dev-name" style="font-size:11px">PIR Sensors</div>
+            <div class="dev-sub">Multi-directional motion array</div>
+          </div>
+        </div>
+        <div class="pir-status"><div class="pir-dot"></div>ACTIVE</div>
+      </div>
+    </div>
+
+    <div class="log-head"><div class="p-label" style="margin:0">Event Log</div></div>
+    <div class="log-feed" id="lf"></div>
+
+    <div class="stats-bar">
+      <div class="stat">POLES <span class="sv">8</span></div>
+      <div class="stat">COVERAGE <span class="sv">100%</span></div>
+      <div class="stat">UPTIME <span class="sv" id="upEl">00:00</span></div>
+      <div class="stat">PIR <span class="sv" id="pirCount">0</span></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+const S = {ll:false, sp:false, ws:false};
+let frame = 0;
+let pirCount = 0;
+const startTime = Date.now();
+const DURATION = 5.0; // must match backend DURATION
+
+// Track when each device expires (set on trigger) for countdown ring
+const expiry = {ll:0, sp:0, ws:0};
+
+const cv = document.getElementById('c');
+const ctx = cv.getContext('2d');
+
+let mx = -1000, my = -1000;
+cv.addEventListener('mousemove', e => {
+  const rect = cv.getBoundingClientRect();
+  mx = (e.clientX - rect.left) * devicePixelRatio;
+  my = (e.clientY - rect.top) * devicePixelRatio;
+});
+function resize() {
+  cv.width = cv.parentElement.clientWidth * devicePixelRatio;
+  cv.height = cv.parentElement.clientHeight * devicePixelRatio;
+  cv.style.width = cv.parentElement.clientWidth + 'px';
+  cv.style.height = cv.parentElement.clientHeight + 'px';
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+}
+resize();
+window.addEventListener('resize', () => { ctx.setTransform(1,0,0,1,0,0); resize(); });
+
+const W = () => cv.parentElement.clientWidth;
+const H = () => cv.parentElement.clientHeight;
+const FIELD = 10;
+
+function proj(wx, wy) {
+  const sc = Math.min(W(), H()) * 0.038;
+  return {
+    x: W()/2 + (wx - wy) * sc * 1.2,
+    y: H() * 0.44 + (wx + wy - FIELD) * sc * 0.62
+  };
+}
+
+const POLES = [
+  {x:0,y:0},{x:5,y:0},{x:10,y:0},
+  {x:10,y:5},{x:10,y:10},{x:5,y:10},
+  {x:0,y:10},{x:0,y:5}
+];
+
+let drops = [], waves = [], pirs = [], laserP = 0;
+
+function drawGround() {
+  const c0=proj(0,0),c1=proj(FIELD,0),c2=proj(FIELD,FIELD),c3=proj(0,FIELD);
+  ctx.beginPath();
+  ctx.moveTo(c0.x+8,c0.y+8);ctx.lineTo(c1.x+8,c1.y+8);
+  ctx.lineTo(c2.x+8,c2.y+8);ctx.lineTo(c3.x+8,c3.y+8);
+  ctx.closePath();ctx.fillStyle='rgba(0,0,0,0.4)';ctx.fill();
+
+  for(let x=0;x<FIELD;x++){
+    for(let y=0;y<FIELD;y++){
+      const p=proj(x,y),p1=proj(x+1,y),p2=proj(x+1,y+1),p3=proj(x,y+1);
+      ctx.beginPath();
+      ctx.moveTo(p.x,p.y);ctx.lineTo(p1.x,p1.y);
+      ctx.lineTo(p2.x,p2.y);ctx.lineTo(p3.x,p3.y);
+      ctx.closePath();
+      ctx.fillStyle=(x+y)%2?'#163820':'#1a4024';
+      ctx.fill();ctx.strokeStyle='#0e2818';ctx.lineWidth=.5;ctx.stroke();
+    }
+  }
+
+  [[{x:0,y:0},{x:10,y:0}],[{x:10,y:0},{x:10,y:10}],
+   [{x:10,y:10},{x:0,y:10}],[{x:0,y:10},{x:0,y:0}]].forEach(([a,b])=>{
+    const pa=proj(a.x,a.y),pb=proj(b.x,b.y);
+    ctx.beginPath();ctx.moveTo(pa.x,pa.y-4);ctx.lineTo(pb.x,pb.y-4);
+    ctx.strokeStyle='#5a3e1a';ctx.lineWidth=2;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pa.x,pa.y-10);ctx.lineTo(pb.x,pb.y-10);
+    ctx.strokeStyle='#6b4a20';ctx.lineWidth=1.5;ctx.stroke();
+    for(let i=0;i<=10;i++){
+      const t=i/10,px=pa.x+(pb.x-pa.x)*t,py=pa.y+(pb.y-pa.y)*t;
+      ctx.beginPath();ctx.moveTo(px,py);ctx.lineTo(px,py-13);
+      ctx.strokeStyle='#7a5428';ctx.lineWidth=1.5;ctx.stroke();
+    }
+  });
+
+  const ctr=proj(5,5);
+  [[5,0],[10,5],[5,10],[0,5]].forEach(([px,py])=>{
+    const pp=proj(px,py);
+    ctx.beginPath();ctx.moveTo(ctr.x,ctr.y);ctx.lineTo(pp.x,pp.y-18);
+    ctx.setLineDash([3,7]);ctx.strokeStyle='rgba(0,232,122,0.08)';
+    ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);
+  });
+}
+
+function drawLaser() {
+  if(!S.ll) return;
+  laserP=(laserP+.018)%1;
+  const LH=-38;
+  ctx.save();
+  for(let i=0;i<POLES.length;i++){
+    const a=POLES[i],b=POLES[(i+1)%POLES.length];
+    const pa=proj(a.x,a.y),pb=proj(b.x,b.y);
+    ctx.beginPath();ctx.moveTo(pa.x,pa.y+LH);ctx.lineTo(pb.x,pb.y+LH);
+    ctx.shadowColor='#ff2040';ctx.shadowBlur=18;
+    ctx.strokeStyle='rgba(255,32,64,0.3)';ctx.lineWidth=7;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(pa.x,pa.y+LH);ctx.lineTo(pb.x,pb.y+LH);
+    ctx.shadowBlur=10;
+    const bright=0.75+Math.sin((frame+i*30)*0.06)*0.25;
+    ctx.strokeStyle='rgba(255,32,64,'+bright+')';ctx.lineWidth=1.8;ctx.stroke();
+    const t2=((laserP+i*.125)%1);
+    const sx=pa.x+(pb.x-pa.x)*t2,sy=pa.y+(pb.y-pa.y)*t2+LH;
+    ctx.beginPath();ctx.arc(sx,sy,3.5,0,Math.PI*2);
+    ctx.fillStyle='#fff';ctx.shadowColor='#ff4060';ctx.shadowBlur=16;ctx.fill();
+  }
+  ctx.shadowBlur=0;ctx.restore();
+}
+
+function drawPole(wx,wy,idx) {
+  const activeSp = S.sp === true || String(S.sp) === String(idx);
+  const activeWs = S.ws === true || String(S.ws) === String(idx);
+  const b=proj(wx,wy);const H2=48;
+  ctx.beginPath();ctx.ellipse(b.x,b.y+3,7,3.5,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,0.35)';ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(b.x-6,b.y);ctx.lineTo(b.x,b.y-3);
+  ctx.lineTo(b.x+6,b.y);ctx.lineTo(b.x,b.y+3);
+  ctx.closePath();ctx.fillStyle='#2a3a48';ctx.fill();
+  ctx.strokeStyle='#3a4e60';ctx.lineWidth=.8;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(b.x-2.5,b.y-2);ctx.lineTo(b.x-2.5,b.y-H2);
+  ctx.strokeStyle='#6a8090';ctx.lineWidth=4;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(b.x,b.y-2);ctx.lineTo(b.x,b.y-H2);
+  ctx.strokeStyle='#aabbc8';ctx.lineWidth=2;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(b.x+1.5,b.y-2);ctx.lineTo(b.x+1.5,b.y-H2);
+  ctx.strokeStyle='#7a9aaa';ctx.lineWidth=1;ctx.stroke();
+
+  const spY=b.y-H2*.52;
+  if(S.sp){
+    ctx.beginPath();ctx.arc(b.x,spY,6,0,Math.PI*2);
+    ctx.fillStyle='rgba(255,170,0,0.15)';ctx.fill();
+  }
+  ctx.beginPath();
+  ctx.moveTo(b.x-4,spY-3);ctx.lineTo(b.x+2,spY-5);
+  ctx.lineTo(b.x+2,spY+5);ctx.lineTo(b.x-4,spY+3);ctx.closePath();
+  ctx.fillStyle=S.sp?'#ffaa00':'#4a6070';ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(b.x+2,spY-5);ctx.bezierCurveTo(b.x+8,spY-8,b.x+8,spY+8,b.x+2,spY+5);
+  ctx.fillStyle=S.sp?'rgba(255,170,0,0.4)':'rgba(74,96,112,0.5)';ctx.fill();
+
+  const pirY=b.y-H2*.32;
+  ctx.beginPath();ctx.moveTo(b.x-5,pirY);ctx.lineTo(b.x+5,pirY);
+  ctx.lineTo(b.x+4,pirY+6);ctx.lineTo(b.x-4,pirY+6);ctx.closePath();
+  ctx.fillStyle='#2a3a4a';ctx.fill();ctx.strokeStyle='#3a5060';ctx.lineWidth=.8;ctx.stroke();
+  ctx.beginPath();ctx.arc(b.x,pirY+3,2,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,232,122,0.5)';ctx.fill();
+
+  ctx.beginPath();ctx.moveTo(b.x-11,b.y-H2+10);ctx.lineTo(b.x+11,b.y-H2+10);
+  ctx.strokeStyle='#5a7888';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(b.x-11,b.y-H2+12);ctx.lineTo(b.x+11,b.y-H2+12);
+  ctx.strokeStyle='#3a5060';ctx.lineWidth=1;ctx.stroke();
+
+  const topY=b.y-H2+5;
+  if(S.ws){
+    const angle=(frame*.07)%(Math.PI*2);
+    for(let arm=0;arm<3;arm++){
+      const a2=angle+arm*(Math.PI*2/3);
+      ctx.beginPath();ctx.moveTo(b.x,topY);
+      ctx.lineTo(b.x+Math.cos(a2)*10,topY+Math.sin(a2)*4);
+      ctx.strokeStyle='rgba(0,170,255,0.7)';ctx.lineWidth=1.8;ctx.stroke();
+    }
+  }
+  ctx.beginPath();ctx.arc(b.x,topY,4,0,Math.PI*2);
+  ctx.fillStyle=S.ws?'#00aaff':'#3a5060';
+  if(S.ws){ctx.shadowColor='#00aaff';ctx.shadowBlur=10;}
+  ctx.fill();ctx.shadowBlur=0;
+
+  ctx.beginPath();ctx.arc(b.x,b.y-H2-1,5,Math.PI,0,false);
+  ctx.fillStyle='#1e2e3e';ctx.fill();ctx.strokeStyle='#3a5060';ctx.lineWidth=.8;ctx.stroke();
+  ctx.beginPath();ctx.arc(b.x,b.y-H2-1,2.5,Math.PI,0,false);
+  ctx.fillStyle='rgba(0,180,255,0.4)';ctx.fill();
+
+  const activeLl = S.ll === true || String(S.ll) === String(idx);
+  const ledColor=activeLl?'#ff2040':activeSp?'#ffaa00':'#00e87a';
+  ctx.beginPath();ctx.arc(b.x+3,b.y-H2-4,2,0,Math.PI*2);
+  ctx.fillStyle=ledColor;ctx.shadowColor=ledColor;ctx.shadowBlur=6;ctx.fill();ctx.shadowBlur=0;
+}
+
+function drawControlRoom() {
+  const c=proj(5,5);const W2=46,H2=34,BH=16;
+  ctx.beginPath();
+  ctx.moveTo(c.x,c.y-2);ctx.lineTo(c.x+W2/2,c.y-2-BH/2);
+  ctx.lineTo(c.x+W2/2,c.y+H2/2-BH/2);ctx.lineTo(c.x,c.y+H2/2);
+  ctx.fillStyle='rgba(0,0,0,0.3)';ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(c.x,c.y+H2/2-BH);ctx.lineTo(c.x+W2/2,c.y-BH/2);
+  ctx.lineTo(c.x+W2/2,c.y+H2/2-BH/2-BH);ctx.lineTo(c.x,c.y+H2/2-BH*2);
+  ctx.fillStyle='#0d1f2e';ctx.fill();ctx.strokeStyle='#1a3050';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(c.x-W2/2,c.y-BH/2);ctx.lineTo(c.x,c.y+H2/2-BH);
+  ctx.lineTo(c.x,c.y+H2/2-BH*2);ctx.lineTo(c.x-W2/2,c.y-BH/2-BH);
+  ctx.fillStyle='#0a1728';ctx.fill();ctx.strokeStyle='#142840';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(c.x,c.y-H2/2-BH);ctx.lineTo(c.x+W2/2,c.y-H2/4-BH/2-4);
+  ctx.lineTo(c.x,c.y+4-BH);ctx.lineTo(c.x-W2/2,c.y-H2/4-BH/2-4);
+  ctx.fillStyle='#152535';ctx.fill();ctx.strokeStyle='#203a55';ctx.lineWidth=1;ctx.stroke();
+  for(let r=0;r<3;r++){
+    ctx.fillStyle=r===0?'#0a1f2e':'#081828';
+    const ry=c.y+H2/2-BH*2+r*5;
+    ctx.fillRect(c.x-10,ry-3,20,4);
+    ctx.beginPath();ctx.arc(c.x-6+r*4,ry-1,1.5,0,Math.PI*2);
+    ctx.fillStyle=r%2===0?'#00e87a':'#ffaa00';
+    ctx.shadowColor=r%2===0?'#00e87a':'#ffaa00';ctx.shadowBlur=4;ctx.fill();ctx.shadowBlur=0;
+  }
+  ctx.font='bold 7px Courier New';ctx.fillStyle='#5a8aaa';ctx.textAlign='center';
+  ctx.fillText('CONTROL',c.x,c.y+H2/2-2);
+}
+
+function spawnDrops() {
+  if(S.ws === false) return; // Strict check so pole 0 doesn't fail
+  POLES.forEach((p, idx)=>{
+    const activeWs = S.ws === true || String(S.ws) === String(idx);
+    if(activeWs && Math.random()<.25){
+      const b=proj(p.x,p.y);
+      const a=Math.random()*Math.PI*2,spd=1.2+Math.random()*2.2;
+      drops.push({x:b.x,y:b.y-46,vx:Math.cos(a)*spd,vy:Math.sin(a)*.5-2.5,life:1,sz:1+Math.random()*2});
+    }
+  });
+}
+function drawDrops() {
+  drops=drops.filter(d=>d.life>0);
+  drops.forEach(d=>{
+    d.x+=d.vx;d.y+=d.vy;d.vy+=.12;d.life-=.022;
+    ctx.beginPath();ctx.arc(d.x,d.y,d.sz,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,170,255,'+d.life*.9+')';
+    ctx.shadowColor='#00aaff';ctx.shadowBlur=4;ctx.fill();
+  });
+  ctx.shadowBlur=0;
+}
+
+function spawnWaves() {
+  if(S.sp === false || frame%35!==0) return; // Strict check
+  POLES.forEach((p, idx)=>{
+    const activeSp = S.sp === true || String(S.sp) === String(idx);
+    if(activeSp) {
+      const b=proj(p.x,p.y);waves.push({x:b.x,y:b.y-25,r:3,life:1});
+    }
+  });
+}
+function drawWaves() {
+  waves=waves.filter(w=>w.life>0);
+  waves.forEach(w=>{
+    w.r+=1.8;w.life-=.02;
+    ctx.beginPath();ctx.arc(w.x,w.y,w.r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,170,0,'+w.life*.55+')';ctx.lineWidth=1.5;ctx.stroke();
+  });
+}
+
+function checkPIR() {
+  if(frame%20!==0) return; // Check more frequently for mouse
+  POLES.forEach((p, idx) => {
+    const b = proj(p.x, p.y);
+    const dx = b.x - mx, dy = (b.y - 30) - my;
+    if(dx*dx + dy*dy < 1500) { // If cursor is near the pole
+      if(Math.random() < 0.3) {
+        pirs.push({x:b.x, y:b.y-30, r:4, life:1});
+        pirCount++; document.getElementById('pirCount').textContent=pirCount;
+        log(`PIR motion at pole ${idx + 1} [${p.x},${p.y}]`, 'warn');
+        showAlert(`MOTION POLE ${idx + 1}`);
+      }
+    }
+  });
+}
+function drawPIRs() {
+  pirs=pirs.filter(p2=>p2.life>0);
+  pirs.forEach(p2=>{
+    p2.r+=1.6;p2.life-=.018;
+    ctx.beginPath();ctx.arc(p2.x,p2.y,p2.r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,200,50,'+p2.life+')';ctx.lineWidth=2;ctx.stroke();
+  });
+}
+
+function showAlert(msg) {
+  const ov=document.getElementById('alertOverlay');
+  const chip=document.createElement('div');
+  chip.className='a-chip';chip.textContent='⚠ '+msg;
+  ov.appendChild(chip);
+  setTimeout(()=>{if(chip.parentNode)chip.remove();},3500);
+}
+
+function drawHUD() {
+  const cx=50,cy=H()-50,r=22;
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.fillStyle='rgba(7,12,20,0.7)';ctx.fill();
+  ctx.strokeStyle='#1e3048';ctx.lineWidth=1;ctx.stroke();
+  ctx.font='bold 9px Courier New';ctx.textAlign='center';
+  ctx.fillStyle='#00e87a';ctx.fillText('N',cx-15,cy-8);
+  ctx.fillStyle='#4a6a88';
+  ctx.fillText('S',cx+15,cy+14);ctx.fillText('E',cx+20,cy+3);ctx.fillText('W',cx-20,cy+3);
+  ctx.font='bold 10px Courier New';ctx.textAlign='left';
+  ctx.fillStyle='rgba(0,232,122,0.6)';ctx.fillText('RAKSHAK FIELD — SECTOR 01',16,16);
+  ctx.font='9px Courier New';ctx.fillStyle='rgba(74,106,136,0.8)';ctx.fillText('LIVE MONITOR',16,28);
+  const sx=W()-90,sy=H()-20;
+  ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+60,sy);
+  ctx.strokeStyle='#4a6a88';ctx.lineWidth=1;ctx.stroke();
+  ctx.beginPath();ctx.moveTo(sx,sy-4);ctx.lineTo(sx,sy+4);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(sx+60,sy-4);ctx.lineTo(sx+60,sy+4);ctx.stroke();
+  ctx.font='8px Courier New';ctx.fillStyle='#4a6a88';ctx.textAlign='center';
+  ctx.fillText('10m',sx+30,sy-6);
+}
+
+function render() {
+  frame++;
+  const w=W(),h=H();
+  ctx.clearRect(0,0,w,h);
+  const bg=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,Math.max(w,h)*.7);
+  bg.addColorStop(0,'#0d1f30');bg.addColorStop(1,'#070c14');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='rgba(30,48,72,0.4)';
+  for(let gx=0;gx<w;gx+=30)for(let gy=0;gy<h;gy+=30){
+    ctx.beginPath();ctx.arc(gx,gy,.8,0,Math.PI*2);ctx.fill();
+  }
+  drawGround();drawLaser();
+  POLES.map((p,i)=>({p,i})).sort((a,b)=>(a.p.x+a.p.y)-(b.p.x+b.p.y)).forEach(o=>drawPole(o.p.x,o.p.y,o.i));
+  drawControlRoom();
+  spawnDrops();drawDrops();
+  spawnWaves();drawWaves();
+  checkPIR();drawPIRs();
+  drawHUD();
+  requestAnimationFrame(render);
+}
+
+// ── UI refresh ────────────────────────────────────────────────────────────
+function refreshUI() {
+  const ids = ['ll','sp','ws'];
+  const clsMap = {ll:'active-ll', sp:'active-sp', ws:'active-ws'};
+  const onCls  = {ll:'on-ll', sp:'on-sp', ws:'on-ws'};
+
+  ids.forEach(id=>{
+    const card=document.getElementById('c'+id);
+    const badge=document.getElementById('b'+id);
+    const arc=document.getElementById('arc'+id);
+    const on=S[id];
+    card.classList.toggle(clsMap[id], on);
+    badge.textContent=on?'ON':'OFF';
+    badge.className='dev-badge'+(on?' '+onCls[id]:'');
+
+    // Countdown arc
+    if(on && expiry[id]>0){
+      const remaining=Math.max(0, expiry[id]-Date.now()/1000);
+      const pct=remaining/DURATION; // 0..1
+      const circ=2*Math.PI*11; // r=11 → circumference≈69.1
+      arc.style.strokeDashoffset=circ*(1-pct);
+      arc.style.strokeDasharray=circ;
+    } else {
+      arc.style.strokeDashoffset=circ2;
+    }
+  });
+}
+const circ2=2*Math.PI*11;
+
+// ── API poll ──────────────────────────────────────────────────────────────
+let apiOk=false;
+async function poll() {
+  try{
+    const r=await fetch('/api/state');
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!apiOk){
+      apiOk=true;
+      document.getElementById('apiDot').className='api-dot ok';
+      document.getElementById('apiMsg').className='api-msg ok';
+      document.getElementById('apiMsg').textContent='Connected — http://127.0.0.1:5001/api/state';
+      log('API connection established','ok');
+    }
+    ['ll','sp','ws'].forEach(id=>{
+      const wasOn=!!S[id];
+      S[id]=d[id] || false; // Keep the pole ID if backend sends it
+      const isOn=!!S[id];
+      if(!wasOn&&isOn){
+        log(id.toUpperCase()+' ACTIVATED by backend','alert');
+        showAlert(id.toUpperCase()+' DEVICE TRIGGERED');
+        expiry[id]=Date.now()/1000+DURATION;
+      }
+      if(wasOn&&!S[id]){
+        log(id.toUpperCase()+' deactivated','ok');
+        expiry[id]=0;
+      }
+    });
+    refreshUI();
+  } catch(e){
+    if(apiOk){
+      apiOk=false;
+      document.getElementById('apiDot').className='api-dot err';
+      document.getElementById('apiMsg').className='api-msg err';
+      document.getElementById('apiMsg').textContent='Connection lost — retrying...';
+      log('API connection lost: '+e.message,'alert');
+    }
+  }
+}
+setInterval(poll,500);
+
+// ── Manual trigger (calls /api/trigger) ──────────────────────────────────
+async function trigger(device) {
+  let pole = document.getElementById('poleInput').value;
+  // Convert human input (1-8) to internal array index (0-7)
+  if (pole !== "") {
+    pole = String(parseInt(pole) - 1);
+  }
+  const payload = pole !== "" ? { device, pole } : { device };
+  try{
+    const r=await fetch('/api/trigger',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(payload)
+    });
+    const d=await r.json();
+    if(d.status==='success'){
+      log('Manual trigger: '+device.toUpperCase()+' ('+DURATION+'s)','info');
+      expiry[device]=Date.now()/1000+DURATION;
+    } else {
+      log('Trigger error: '+d.error,'warn');
+    }
+  } catch(e){ log('Trigger failed: '+e.message,'warn'); }
+}
+async function trigAll(){await trigger('ll');await trigger('sp');await trigger('ws');}
+function trigOff(){log('State decays automatically after '+DURATION+'s','info');}
+
+// ── Log ───────────────────────────────────────────────────────────────────
+function log(msg,type='info') {
+  const feed=document.getElementById('lf');
+  const now=new Date().toTimeString().slice(0,8);
+  const el=document.createElement('div');
+  el.className='log-entry '+type;
+  el.innerHTML='<span class="lt">'+now+'</span><span class="lm">'+msg+'</span>';
+  feed.insertBefore(el,feed.firstChild);
+  if(feed.children.length>80)feed.removeChild(feed.lastChild);
+}
+
+// Clock & uptime
+setInterval(()=>{
+  document.getElementById('clk').textContent=new Date().toTimeString().slice(0,8);
+  const up=Math.floor((Date.now()-startTime)/1000);
+  const m=String(Math.floor(up/60)).padStart(2,'0');
+  const s=String(up%60).padStart(2,'0');
+  document.getElementById('upEl').textContent=m+':'+s;
+  refreshUI(); // update countdown arcs every second
+},1000);
+
+log('RAKSHAK system initialized','ok');
+log('Polling /api/state every 500ms...','info');
+poll();
+render();
+</script>
+</body>
+</html>
