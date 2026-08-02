@@ -7,6 +7,8 @@
 
 ### Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection
 
+**KAVACH** = **K**inetic **A**nimal **V**igilance & **A**utomated **C**rop-guard **H**arness
+
 **TETRA040** · AI-powered farm protection for farmers
 
 KAVACH is a smart, non-invasive deterrent platform that helps farmers protect crops from stray and grazing animals using computer vision, priority-based actuation, and a modern Flutter farmer app — without harming animals or fencing off livelihoods.
@@ -77,7 +79,7 @@ Farmers need a system that is **always watching**, **humane**, and **actionable*
 
 ### The Solution
 
-**KAVACH** (meaning *shield* / *armor*) is a **smart non-invasive stray & grazing animal deterrent system for crop protection**. It combines:
+**KAVACH** (*Kinetic Animal Vigilance & Automated Crop-guard Harness*; also meaning *shield* / *armor*) is a **smart non-invasive stray & grazing animal deterrent system for crop protection**. It combines:
 
 1. **Computer vision** (YOLOv8 + OpenCV) to detect animals near the perimeter in real time  
 2. A **priority engine** that chooses the right response based on animal type, urgency, and conditions  
