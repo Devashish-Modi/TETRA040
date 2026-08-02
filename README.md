@@ -1,8 +1,9 @@
 <div align="center">
 
-<img src="agri_shield_ai/assets/images/kavach_logo.png" width="180" alt="KAVACH logo"/>
-
-# 🌾 KAVACH
+<h1>
+  <img src="agri_shield_ai/assets/images/kavach_logo.png" width="64" height="117" alt="KAVACH" align="center"/>
+  &nbsp;KAVACH
+</h1>
 
 ### Smart Non-Invasive Stray & Grazing Animal Deterrent System for Crop Protection
 
