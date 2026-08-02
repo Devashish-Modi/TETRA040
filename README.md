@@ -32,8 +32,6 @@ KAVACH is a smart, non-invasive deterrent platform that helps farmers protect cr
 <p align="center">
   <img src="agri_shield_ai/assets/images/kavach_logo.png" width="220" alt="KAVACH logo">
 </p>
----
-
 ## Table of Contents
 
 - [Project Overview](#project-overview)
