@@ -25,15 +25,6 @@ KAVACH is a smart, non-invasive deterrent platform that helps farmers protect cr
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](./LICENSE)
 
 <br/>
-
-[![GitHub stars](https://img.shields.io/github/stars/Devashish-Modi/TETRA040?style=flat-square&logo=github)](https://github.com/Devashish-Modi/TETRA040/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/Devashish-Modi/TETRA040?style=flat-square&logo=github)](https://github.com/Devashish-Modi/TETRA040/network/members)
-[![GitHub last commit](https://img.shields.io/github/last-commit/Devashish-Modi/TETRA040?style=flat-square)](https://github.com/Devashish-Modi/TETRA040/commits)
-[![GitHub repo size](https://img.shields.io/github/repo-size/Devashish-Modi/TETRA040?style=flat-square)](https://github.com/Devashish-Modi/TETRA040)
-[![GitHub issues](https://img.shields.io/github/issues/Devashish-Modi/TETRA040?style=flat-square)](https://github.com/Devashish-Modi/TETRA040/issues)
-[![GitHub contributors](https://img.shields.io/github/contributors/Devashish-Modi/TETRA040?style=flat-square)](https://github.com/Devashish-Modi/TETRA040/graphs/contributors)
-[![GitHub release](https://img.shields.io/github/v/release/Devashish-Modi/TETRA040?include_prereleases&style=flat-square)](https://github.com/Devashish-Modi/TETRA040/releases)
-
 </div>
 
 ## Table of Contents
